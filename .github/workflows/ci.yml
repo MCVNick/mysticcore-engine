@@ -1,0 +1,54 @@
+name: Engine CI
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+env:
+  VCPKG_BINARY_SOURCES: "clear;x-gha,readwrite"
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        build_type: [Debug, Release]
+        
+    runs-on: ${{ matrix.os }}
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup vcpkg
+      uses: lukka/run-vcpkg@v11
+      with:
+        vcpkgGitCommitId: 'c8696863d371ab7f46545af1d618633046a4f0e2'
+    
+    - name: Export GitHub Actions cache environment variables
+      uses: actions/github-script@v6
+      with:
+        script: |
+          core.exportVariable('ACTIONS_CACHE_URL', process.env.ACTIONS_CACHE_URL || '');
+          core.exportVariable('ACTIONS_RUNTIME_TOKEN', process.env.ACTIONS_RUNTIME_TOKEN || '');
+    
+    - name: Install Linux dependencies
+      if: runner.os == 'Linux'
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y libgl1-mesa-dev libglu1-mesa-dev libx11-dev libxrandr-dev libxi-dev libxcursor-dev libxinerama-dev
+    
+    - name: Configure CMake
+      run: |
+        cmake -B build -S . -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake
+    
+    - name: Build
+      run: cmake --build build --config ${{ matrix.build_type }} -j
+    
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: mysticcore-engine-${{ matrix.os }}-${{ matrix.build_type }}
+        path: build/lib/

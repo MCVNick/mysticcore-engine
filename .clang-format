@@ -1,0 +1,21 @@
+---
+BasedOnStyle: LLVM
+IndentWidth: 4
+ColumnLimit: 100
+PointerAlignment: Left
+ReferenceAlignment: Left
+NamespaceIndentation: None
+BreakBeforeBraces: Attach
+AllowShortFunctionsOnASingleLine: Empty
+AllowShortIfStatementsOnASingleLine: Never
+AllowShortLoopsOnASingleLine: false
+AlwaysBreakTemplateDeclarations: Yes
+BinPackParameters: false
+BinPackArguments: false
+ConstructorInitializerAllOnOneLineOrOnePerLine: true
+Cpp11BracedListStyle: true
+IndentCaseLabels: true
+SortIncludes: true
+SortUsingDeclarations: true
+SpaceAfterTemplateKeyword: true
+Standard: c++20

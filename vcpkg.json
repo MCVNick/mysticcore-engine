@@ -1,0 +1,19 @@
+{
+  "name": "mysticcore-engine",
+  "version": "0.1.0",
+  "dependencies": [
+    "sdl2",
+    "glm",
+    "entt",
+    "imgui",
+    {
+      "name": "imgui",
+      "default-features": false,
+      "features": ["sdl2-binding", "opengl3-binding"]
+    },
+    "spdlog",
+    "tracy",
+    "nlohmann-json"
+  ],
+  "builtin-baseline": "c8696863d371ab7f46545af1d618633046a4f0e2"
+}
